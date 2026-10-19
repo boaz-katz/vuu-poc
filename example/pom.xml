@@ -19,19 +19,9 @@
     </properties>
 
     <modules>
-        <module>editable</module>
         <module>main</module>
-        <module>order</module>
-        <module>permission</module>
-        <module>price</module>
-        <module>basket</module>
-        <module>main-java</module>
-        <module>virtualized-table</module>
-        <module>rest-api</module>
         <module>http2-server</module>
-        <module>main-clickhouse</module>
-        <module>notifications</module>
-        <module>python-integration</module>
+        <module>permission</module>
     </modules>
 
     <build>

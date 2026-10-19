@@ -8,23 +8,12 @@ import org.finos.toolbox.time.{Clock, DefaultClock}
 import org.finos.vuu.core.*
 import org.finos.vuu.core.module.TableDefContainer
 import org.finos.vuu.core.module.authn.AuthNModule
-import org.finos.vuu.core.module.auths.PermissionModule
-import org.finos.vuu.core.module.basket.BasketModule
-import org.finos.vuu.core.module.editable.EditableModule
-import org.finos.vuu.core.module.metrics.MetricsModule
-import org.finos.vuu.core.module.price.PriceModule
-import org.finos.vuu.core.module.simul.SimulationModule
-import org.finos.vuu.example.rest.client.{HttpClient, StubbedBackend}
-import org.finos.vuu.example.rest.module.RestModule
-import org.finos.vuu.example.virtualtable.module.VirtualTableModule
-import org.finos.vuu.example.notifications.module.SimulatedNotificationsModule
+import org.finos.vuu.poc.SchoolModule
 import org.finos.vuu.http2.server.VuuHttp2ServerFactory
 import org.finos.vuu.http2.server.config.{AbsolutePathWebRoot, VuuHttp2ServerOptions}
 import org.finos.vuu.net.auth.LoginTokenService
 import org.finos.vuu.net.http.HttpServerFactory
 import org.finos.vuu.net.ssl.VuuSSLByCertAndKey
-import org.finos.vuu.order.oms.OmsApi
-import org.finos.vuu.plugin.virtualized.VirtualizedTablePlugin
 
 /*
 //to allow self signed certs
@@ -39,8 +28,6 @@ object SimulMain extends App with StrictLogging {
   implicit val clock: Clock = new DefaultClock
   implicit val lifecycle: LifecycleContainer = new LifecycleContainer
   implicit val tableDefContainer: TableDefContainer = new TableDefContainer(Map())
-
-  val omsApi = OmsApi()
 
   logger.info("[VUU] Starting...")
 
@@ -60,17 +47,8 @@ object SimulMain extends App with StrictLogging {
     VuuClientConnectionOptions()
       .withHeartbeatEnabled(),
     httpServerFactory = createHttpServerFactory(defaultConfig)
-  ).withModule(PriceModule())
-    .withModule(SimulationModule())
-    .withModule(MetricsModule())
+  ).withModule(SchoolModule())
     .withModule(AuthNModule(loginTokenService))
-    .withModule(EditableModule())
-    .withModule(PermissionModule())
-    .withModule(BasketModule(omsApi))
-    .withModule(RestModule(HttpClient(StubbedBackend()), defaultConfig.getConfig(ConfigKeys.restModuleConfig)))
-    .withModule(VirtualTableModule())
-    .withModule(SimulatedNotificationsModule())
-    .withPlugin(VirtualizedTablePlugin)
 
   val vuuServer = new VuuServer(config)
 
@@ -88,7 +66,6 @@ object ConfigKeys {
   final val sslEnabled = "vuu.ssl"
   final val certPath = "vuu.certPath"
   final val keyPath = "vuu.keyPath"
-  final val restModuleConfig = "vuu.restModule"
 }
 
 // Environment variables that, when set, override vuu.certPath / vuu.keyPath. The dev container
@@ -109,7 +86,7 @@ private def createSsl(c: Config): VuuSSLByCertAndKey = {
 private def createHttpServerFactory(c: Config): HttpServerFactory = {
   val options = VuuHttp2ServerOptions()
     .withWebRoot(AbsolutePathWebRoot(c.getString(ConfigKeys.webroot), directoryListings = true))
-    .withPort(8443)
+    .withPort(8444)
 
   if (c.getBoolean(ConfigKeys.sslEnabled)) {
     VuuHttp2ServerFactory(options.withSsl(createSsl(c)))
@@ -121,7 +98,7 @@ private def createHttpServerFactory(c: Config): HttpServerFactory = {
 private def createWebSocketOptions(c: Config): VuuWebSocketOptions = {
   val options = VuuWebSocketOptions()
     .withUri("websocket")
-    .withWsPort(8090)
+    .withWsPort(8091)
     .withBindAddress("0.0.0.0")
 
   if (c.getBoolean(ConfigKeys.sslEnabled)) {

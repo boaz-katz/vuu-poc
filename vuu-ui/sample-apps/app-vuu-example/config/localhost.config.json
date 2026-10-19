@@ -1,1 +1,3 @@
-{}
+{
+  "websocketUrl": "wss://localhost:8091/websocket"
+}

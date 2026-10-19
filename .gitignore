@@ -54,3 +54,4 @@ vuu-ui/packages/vuu-data-remote/src/inlined-worker.js
 #Google Antigravity CLI
 agy.md
 .agyignore
+.jvm-tmp/

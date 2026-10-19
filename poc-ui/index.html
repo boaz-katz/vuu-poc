@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vuu PoC WebSocket Inspector</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Vuu PoC WebSocket Inspector</h1>
+      <p>Logs the raw Vuu protocol messages for <code>SCHOOL.enrolledStudents</code>.</p>
+      <form id="connection-form">
+        <label>Username <input id="username" autocomplete="username" required /></label>
+        <label>Password <input id="password" type="password" autocomplete="current-password" required /></label>
+        <button type="submit">Connect and subscribe</button>
+      </form>
+      <p id="status" role="status">Disconnected</p>
+      <button id="clear-log" type="button">Clear log</button>
+      <pre id="message-log" aria-live="polite"></pre>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>

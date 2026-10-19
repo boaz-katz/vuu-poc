@@ -11,6 +11,10 @@
     <artifactId>main</artifactId>
     <name>${project.artifactId}</name>
 
+    <properties>
+        <vuu.webroot>../../poc-ui</vuu.webroot>
+    </properties>
+
     <dependencies>
 
         <dependency>
@@ -21,31 +25,7 @@
 
         <dependency>
             <groupId>org.finos.vuu</groupId>
-            <artifactId>basket</artifactId>
-            <version>12.5.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.finos.vuu</groupId>
-            <artifactId>virtualized-table</artifactId>
-            <version>12.5.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.finos.vuu</groupId>
-            <artifactId>price</artifactId>
-            <version>12.5.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.finos.vuu</groupId>
-            <artifactId>order</artifactId>
-            <version>12.5.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.finos.vuu</groupId>
-            <artifactId>editable</artifactId>
+            <artifactId>http2-server</artifactId>
             <version>12.5.0-SNAPSHOT</version>
         </dependency>
 
@@ -56,15 +36,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.finos.vuu</groupId>
-            <artifactId>rest-api</artifactId>
-            <version>12.5.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.finos.vuu</groupId>
-            <artifactId>notifications</artifactId>
-            <version>12.5.0-SNAPSHOT</version>
+            <groupId>com.typesafe</groupId>
+            <artifactId>config</artifactId>
+            <version>1.4.9</version>
         </dependency>
 
         <dependency>
@@ -74,22 +48,15 @@
         </dependency>
 
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${vuu.logback.version}</version>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.14</version>
         </dependency>
 
         <dependency>
-            <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_3</artifactId>
-            <version>${vuu.scalatest.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.scala-lang</groupId>
-                    <artifactId>scala3-library_3</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${vuu.logback.version}</version>
         </dependency>
 
     </dependencies>
@@ -171,7 +138,7 @@
                         <argument>-Xmx10G</argument>
                         <argument>-classpath</argument>
                         <classpath />
-                        <argument>-Dvuu.webroot=../../vuu-ui/deployed_apps/app-vuu-example</argument>
+                        <argument>-Dvuu.webroot=${vuu.webroot}</argument>
                         <argument>-Dvuu.keyPath=src/main/resources/certs/key.pem</argument>
                         <argument>-Dvuu.certPath=src/main/resources/certs/cert.pem</argument>
                         <argument>-Dlogback.configurationFile=logback-netty.xml</argument>
