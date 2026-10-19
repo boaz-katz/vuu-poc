@@ -5,9 +5,10 @@ The PoC loads `SCHOOL.enrolledStudents` from PostgreSQL. The SQL joins `students
 ## Ports
 
 ```text
-PostgreSQL:             127.0.0.1:5434
-Vuu HTTP/authentication https://localhost:8444
-Vuu WebSocket:          wss://localhost:8091/websocket
+PostgreSQL:                  127.0.0.1:5434
+Vuu desktop UI + login:      https://localhost:8444
+Vuu WebSocket:               wss://localhost:8091/websocket
+PoC WebSocket inspector:     https://localhost:8445
 ```
 
 ## Start PostgreSQL
@@ -34,42 +35,42 @@ $env:TMP = 'C:\development\poc-pub-sub\.jvm-tmp'
 .\mvnw.cmd -pl example/main -am compile -DskipTests -rf :main
 ```
 
-## PoC WebSocket inspector
+## Start Vuu desktop UI
 
-Start Vuu from `example/main`:
+Start Vuu from `example/main` with the standard desktop UI webroot:
 
 ```powershell
 cd example\main
-..\..\mvnw.cmd exec:exec
-```
-
-Open `https://localhost:8444/index.html`. Do not open `poc-ui/index.html` using a `file:///` URL; it needs Vuu's `/api/authn` endpoint.
-
-After signing in, select **Connect and subscribe**. The raw JSON log shows `LOGIN_SUCCESS`, table metadata, viewport creation, and the student rows.
-
-## Standard Vuu desktop UI
-
-Stop the inspector server with `Ctrl+C`. Build the Vuu UI once after changing its local configuration:
-
-```powershell
-cd ..\..\vuu-ui
-npm.cmd run build:app
-```
-
-Start the server using the desktop UI webroot:
-
-```powershell
-cd ..\example\main
 ..\..\mvnw.cmd "-Dvuu.webroot=../../vuu-ui/deployed_apps/app-vuu-example" exec:exec
 ```
 
 Open `https://localhost:8444/index.html`, sign in, then select **SCHOOL Tables** > **SCHOOL Enrolled Students**.
 
+## Start the PoC WebSocket inspector
+
+Leave Vuu running. In a second PowerShell window, run:
+
+```powershell
+cd C:\development\poc-pub-sub\vuu\poc-ui
+node server.mjs
+```
+
+Open `https://localhost:8445/index.html`. Do not open `index.html` using a `file:///` URL. The local PoC server proxies login to Vuu on port `8444`, then the browser connects directly to Vuu on port `8091`.
+
+After signing in, select **Connect and subscribe**. The raw JSON log shows `LOGIN_SUCCESS`, table metadata, viewport creation, and the student rows. The Vuu desktop UI remains available on port `8444` at the same time.
+
+## Build the Vuu desktop UI after configuration changes
+
+```powershell
+cd vuu-ui
+npm.cmd run build:app
+```
+
 ## Port conflicts
 
 ```powershell
 Get-NetTCPConnection -State Listen |
-  Where-Object { $_.LocalPort -in 8090, 8091, 8443, 8444 } |
+  Where-Object { $_.LocalPort -in 8090, 8091, 8443, 8444, 8445 } |
   Select-Object LocalAddress, LocalPort, OwningProcess
 ```
 
